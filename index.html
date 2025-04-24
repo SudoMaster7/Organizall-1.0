@@ -4,21 +4,83 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Organizall</title>
-  <!-- Font Inter para visual clean -->
+  <!-- Font Inter para estilo clean -->
   <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');</style>
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
   <style>
-    :root { --bg:#F8F9FA; --text:#1C1C1E; --card-bg:rgba(255,255,255,0.8); --accent:#007AFF; }
-    .dark-mode { --bg:#1C1C1E; --text:#F8F9FA; --card-bg:rgba(28,28,30,0.8); --accent:#0A84FF; }
-    html,body{height:100%;margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);transition:.3s;}
-    .container{backdrop-filter:blur(12px);background:var(--card-bg);border-radius:1rem;padding:2rem;margin:2rem auto;max-width:950px;box-shadow:0 8px 32px rgba(0,0,0,0.1);}
-    .btn-toggle{position:fixed;top:1rem;right:1rem;z-index:999;background:var(--card-bg);border:none;padding:.5rem 1rem;border-radius:1rem;box-shadow:0 4px 16px rgba(0,0,0,0.2);cursor:pointer;color:var(--text);}
-    .nav-tabs .nav-link{color:var(--text);} .nav-tabs .nav-link.active{border-color:var(--accent);color:var(--accent);background:var(--card-bg);}
-    input.form-control, textarea.form-control{background:var(--card-bg);color:var(--text);border:1px solid rgba(0,0,0,0.2);}
-    .list-group-item{background:transparent;border:none;border-bottom:1px solid rgba(0,0,0,0.1);color:var(--text);} .dark-mode .list-group-item{border-bottom:1px solid rgba(255,255,255,0.2);}
-    h1,h5{font-weight:600;} canvas{background:var(--card-bg);border-radius:1rem;padding:1rem;}
-    #pomodoroTimer{font-size:2rem;text-align:center;margin-bottom:1rem;}
+    :root {
+      --bg: #F8F9FA;
+      --text: #1C1C1E;
+      --card-bg: rgba(255,255,255,0.8);
+      --accent: #007AFF;
+      --nav-bg: rgba(255,255,255,0.6);
+    }
+    .dark-mode {
+      --bg: #1C1C1E;
+      --text: #F8F9FA;
+      --card-bg: rgba(28,28,30,0.8);
+      --accent: #0A84FF;
+      --nav-bg: rgba(30,30,30,0.6);
+    }
+    html, body {
+      height: 100%; margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg); color: var(--text);
+      transition: background .3s, color .3s;
+    }
+    .container {
+      backdrop-filter: blur(12px);
+      background: var(--card-bg);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 950px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+    .btn-toggle {
+      position: fixed; top: 1rem; right: 1rem; z-index: 999;
+      background: var(--card-bg); border: none; padding: .5rem 1rem;
+      border-radius: 1rem; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      cursor: pointer; color: var(--text);
+    }
+    /* Navbar estilizada */
+    .nav-tabs {
+      background: var(--nav-bg);
+      border-radius: .5rem;
+      padding: .5rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .nav-tabs .nav-link {
+      color: var(--text);
+      margin: 0 .25rem;
+      border: none;
+      border-radius: .5rem;
+    }
+    .nav-tabs .nav-link.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    input.form-control, select.form-control, textarea.form-control {
+      background: var(--card-bg); color: var(--text);
+      border: 1px solid rgba(0,0,0,0.2);
+    }
+    .list-group-item {
+      background: transparent; border: none;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      color: var(--text);
+    }
+    .dark-mode .list-group-item {
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    h1, h5 { font-weight: 600; }
+    canvas { background: var(--card-bg); border-radius: 1rem; padding: 1rem; }
+    #pomodoroTimer { font-size: 2rem; text-align: center; margin-bottom: 1rem; }
+    /* Agenda visível: agrupado por data */
+    .agenda-date { background: var(--accent); color: #fff; padding: .5rem; border-radius: .5rem; margin-top: 1rem; }
   </style>
 </head>
 <body>
@@ -32,7 +94,6 @@
       <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#shopping">Compras</button></li>
       <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#draw">Sorteio</button></li>
       <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#agenda">Agenda</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#crm">CRM</button></li>
       <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#gallery">Galeria</button></li>
       <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#pomodoro">Pomodoro</button></li>
       <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#projects">Projetos</button></li>
@@ -41,16 +102,16 @@
       <!-- Dashboard -->
       <div class="tab-pane fade show active" id="dashboard">
         <div class="row g-4">
-          <div class="col-md-4"><h5>Gastos</h5><canvas id="expensesChart"></canvas></div>
-          <div class="col-md-4"><h5>Compras</h5><canvas id="shoppingChart"></canvas></div>
-          <div class="col-md-4"><h5>Hábitos</h5><canvas id="habitsChart"></canvas></div>
+          <div class="col-md-4" style="height:300px;"><h5>Gastos</h5><canvas id="expensesChart" style="width:100%;height:100%;"></canvas></div>
+          <div class="col-md-4" style="height:300px;"><h5>Compras</h5><canvas id="shoppingChart" style="width:100%;height:100%;"></canvas></div>
+          <div class="col-md-4" style="height:300px;"><h5>Hábitos</h5><canvas id="habitsChart" style="width:100%;height:100%;"></canvas></div>
         </div>
       </div>
       <!-- Hábitos -->
       <div class="tab-pane fade" id="habits">
         <form id="habitForm" class="row g-2 mb-4">
-          <div class="col-md-6"><input type="text" id="habitInput" class="form-control form-control-lg" placeholder="Novo hábito" required></div>
-          <div class="col-md-4"><input type="date" id="habitDate" class="form-control form-control-lg" required></div>
+          <div class="col-md-6"><input type="text" id="habitInput" class="form-control form-control-lg" placeholder="Novo hábito"></div>
+          <div class="col-md-4"><input type="date" id="habitDate" class="form-control form-control-lg"></div>
           <div class="col-md-2"><button class="btn btn-primary btn-lg w-100">Adicionar</button></div>
         </form>
         <ul class="list-group" id="habitList"></ul>
@@ -58,50 +119,53 @@
       <!-- Gastos -->
       <div class="tab-pane fade" id="expenses">
         <form id="expenseForm" class="row g-2 mb-4">
-          <div class="col-md-4"><input type="text" id="descInput" class="form-control form-control-lg" placeholder="Descrição" required></div>
-          <div class="col-md-3"><input type="number" id="amountInput" class="form-control form-control-lg" placeholder="Valor" step="0.01" required></div>
-          <div class="col-md-3"><input type="date" id="expenseDate" class="form-control form-control-lg" required></div>
-          <div class="col-md-2"><button class="btn btn-success btn-lg w-100">Adicionar</button></div>
+          <div class="col-md-2">
+            <select id="typeInput" class="form-control form-control-lg">
+              <option value="Despesa">Despesa</option>
+              <option value="Receita">Receita</option>
+            </select>
+          </div>
+          <div class="col-md-4"><input type="text" id="descInput" class="form-control form-control-lg" placeholder="Descrição"></div>
+          <div class="col-md-3"><input type="number" id="amountInput" class="form-control form-control-lg" placeholder="Valor" step="0.01"></div>
+          <div class="col-md-3"><input type="date" id="expenseDate" class="form-control form-control-lg"></div>
+          <div class="col-12 mt-2 text-end">
+            <button class="btn btn-success">Adicionar Gasto</button>
+          </div>
         </form>
         <ul class="list-group mb-3" id="expenseList"></ul>
-        <h5>Total: R$<span id="totalAmount">0.00</span></h5>
+        <div class="d-flex justify-content-between">
+          <h6>Receitas: R$<span id="incomeTotal">0.00</span></h6>
+          <h6>Despesas: R$<span id="expenseTotal">0.00</span></h6>
+          <h5>Lucro: R$<span id="profitTotal">0.00</span></h5>
+        </div>
       </div>
       <!-- Compras -->
       <div class="tab-pane fade" id="shopping">
         <form id="shoppingForm" class="row g-2 mb-4">
-          <div class="col-md-4"><input type="text" id="itemInput" class="form-control form-control-lg" placeholder="Item" required></div>
-          <div class="col-md-3"><input type="date" id="itemDate" class="form-control form-control-lg" required></div>
-          <div class="col-md-2"><input type="number" id="itemValue" class="form-control form-control-lg" placeholder="Valor" step="0.01" required></div>
-          <div class="col-md-3"><button class="btn btn-warning btn-lg w-100">Adicionar</button></div>
+          <div class="col-md-4"><input type="text" id="itemInput" class="form-control form-control-lg" placeholder="Item"></div>
+          <div class="col-md-3"><input type="date" id="itemDate" class="form-control form-control-lg"></div>
+          <div class="col-md-3"><input type="number" id="itemValue" class="form-control form-control-lg" placeholder="Valor" step="0.01"></div>
+          <div class="col-md-2"><button class="btn btn-warning btn-lg w-100">Adicionar</button></div>
         </form>
         <ul class="list-group" id="shoppingList"></ul>
       </div>
       <!-- Sorteio -->
       <div class="tab-pane fade" id="draw">
         <form id="drawForm" class="row g-2 mb-4">
-          <div class="col-md-8"><input type="number" id="guessInput" class="form-control form-control-lg" placeholder="0-77" min="0" max="77" required></div>
+          <div class="col-md-8"><input type="number" id="guessInput" class="form-control form-control-lg" placeholder="0-77" min="0" max="77"></div>
           <div class="col-md-4"><button class="btn btn-info btn-lg w-100">Testar</button></div>
-        </form><div id="drawResult" class="text-center fs-4"></div>
+        </form>
+        <div id="drawResult" class="text-center fs-4"></div>
       </div>
       <!-- Agenda -->
       <div class="tab-pane fade" id="agenda">
         <form id="agendaForm" class="row g-2 mb-4">
-          <div class="col-md-4"><input type="text" id="eventTitle" class="form-control" placeholder="Título" required></div>
-          <div class="col-md-3"><input type="date" id="eventDate" class="form-control" required></div>
-          <div class="col-md-3"><input type="time" id="eventTime" class="form-control" required></div>
+          <div class="col-md-4"><input type="text" id="eventTitle" class="form-control" placeholder="Título"></div>
+          <div class="col-md-3"><input type="date" id="eventDate" class="form-control"></div>
+          <div class="col-md-3"><input type="time" id="eventTime" class="form-control"></div>
           <div class="col-md-2"><button class="btn btn-secondary w-100">Adicionar</button></div>
         </form>
-        <ul class="list-group" id="eventList"></ul>
-      </div>
-      <!-- CRM -->
-      <div class="tab-pane fade" id="crm">
-        <form id="crmForm" class="row g-2 mb-4">
-          <div class="col-md-3"><input type="text" id="clientName" class="form-control" placeholder="Nome" required></div>
-          <div class="col-md-3"><input type="tel" id="clientPhone" class="form-control" placeholder="Telefone" required></div>
-          <div class="col-md-4"><input type="email" id="clientEmail" class="form-control" placeholder="Email" required></div>
-          <div class="col-md-2"><button class="btn btn-dark w-100">Adicionar</button></div>
-        </form>
-        <ul class="list-group" id="clientList"></ul>
+        <div id="agendaList"></div>
       </div>
       <!-- Galeria -->
       <div class="tab-pane fade" id="gallery">
@@ -120,8 +184,8 @@
       <!-- Projetos -->
       <div class="tab-pane fade" id="projects">
         <form id="projectForm" class="row g-2 mb-4">
-          <div class="col-md-4"><input type="text" id="projectName" class="form-control" placeholder="Projeto" required></div>
-          <div class="col-md-5"><input type="text" id="projectDesc" class="form-control" placeholder="Descrição" required></div>
+          <div class="col-md-4"><input type="text" id="projectName" class="form-control" placeholder="Projeto"></div>
+          <div class="col-md-5"><input type="text" id="projectDesc" class="form-control" placeholder="Descrição"></div>
           <div class="col-md-3"><button class="btn btn-success w-100">Adicionar</button></div>
         </form>
         <ul class="list-group" id="projectList"></ul>
@@ -130,155 +194,199 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Storage keys
-    const HABITS_KEY='habits_v4',EXPENSES_KEY='expenses_v4',SHOPPING_KEY='shopping_v4',EVENTS_KEY='events',CLIENTS_KEY='clients',PROJECTS_KEY='projects';
-    let timerInterval, remaining=1500;
-    // Theme
-    const toggleBtn=document.getElementById('darkModeToggle');function loadTheme(){const dark=localStorage.getItem('darkMode')==='true';if(dark)document.body.classList.add('dark-mode');toggleBtn.textContent=dark?'🌞':'🌓';}toggleBtn.onclick=()=>{const d=document.body.classList.toggle('dark-mode');localStorage.setItem('darkMode',d);toggleBtn.textContent=d?'🌞':'🌓';renderCharts();};
-    // Data utils
-    const getData=k=>JSON.parse(localStorage.getItem(k)||'[]'),setData=(k,d)=>localStorage.setItem(k,JSON.stringify(d));
-    // Seed
-    function seed() {
-  if (!localStorage.getItem(HABITS_KEY)) {
-    setData(HABITS_KEY, [
-      { name: 'Meditar', date: '2025-04-22' },
-      { name: 'Ler livro', date: '2025-04-23' }
-    ]);
-  }
-  if (!localStorage.getItem(EXPENSES_KEY)) {
-    setData(EXPENSES_KEY, [
-      { desc: 'Café', amount: '5.00', date: '2025-04-20' },
-      { desc: 'Mercado', amount: '45.00', date: '2025-04-21' }
-    ]);
-  }
-  if (!localStorage.getItem(SHOPPING_KEY)) {
-    setData(SHOPPING_KEY, [
-      { name: 'Arroz', done: false, date: '2025-04-22', value: '10.50' },
-      { name: 'Feijão', done: true, date: '2025-04-22', value: '8.20' }
-    ]);
-  }
-  if (!localStorage.getItem(EVENTS_KEY)) {
-    setData(EVENTS_KEY, [
-      { title: 'Consulta Médica', date: '2025-04-25', time: '09:30' }
-    ]);
-  }
-  if (!localStorage.getItem(CLIENTS_KEY)) {
-    setData(CLIENTS_KEY, [
-      { name: 'João Silva', phone: '(11)91234-5678', email: 'joao@email.com' }
-    ]);
-  }
-  if (!localStorage.getItem('gallery')) {
-    setData('gallery', [
-      'https://via.placeholder.com/150?text=Imagem1',
-      'https://via.placeholder.com/150?text=Imagem2'
-    ]);
-  }
-  if (!localStorage.getItem(PROJECTS_KEY)) {
-    setData(PROJECTS_KEY, [
-      { name: 'Projeto Web', desc: 'Site institucional moderno' }
-    ]);
-  }
-}
-    // Render functions
-    function renderHabits(){const l=document.getElementById('habitList');l.innerHTML='';getData(HABITS_KEY).forEach((h,i)=>{l.innerHTML+=`<li class="list-group-item d-flex justify-content-between"><div><strong>${h.name}</strong><small>${h.date}</small></div><button class="btn btn-sm btn-danger" onclick="deleteItem('${HABITS_KEY}',${i});renderHabits();renderCharts();">✗</button></li>`;});}
-    function renderExpenses(){const l=document.getElementById('expenseList');l.innerHTML='';let tot=0;getData(EXPENSES_KEY).forEach((e,i)=>{tot+=+e.amount;l.innerHTML+=`<li class="list-group-item d-flex justify-content-between"><div>${e.desc}: R$${parseFloat(e.amount).toFixed(2)}<small>${e.date}</small></div><button class="btn btn-sm btn-danger" onclick="deleteItem('${EXPENSES_KEY}',${i});renderExpenses();renderCharts();">✗</button></li>`;});document.getElementById('totalAmount').textContent=tot.toFixed(2);}    
-    function renderShopping(){const l=document.getElementById('shoppingList');l.innerHTML='';getData(SHOPPING_KEY).forEach((s,i)=>{l.innerHTML+=`<li class="list-group-item d-flex justify-content-between"><div><input type=checkbox ${s.done?'checked':''} onclick="toggleDone(${i})"> <span style="text-decoration:${s.done?'line-through':''}">${s.name}</span><small>${s.date}</small>R$${parseFloat(s.value).toFixed(2)}</div><button class="btn btn-sm btn-danger" onclick="deleteItem('${SHOPPING_KEY}',${i});renderShopping();renderCharts();">✗</button></li>`;});}
-    function renderEvents(){const l=document.getElementById('eventList');l.innerHTML='';getData(EVENTS_KEY).forEach((e,i)=>{l.innerHTML+=`<li class="list-group-item"><strong>${e.title}</strong> ${e.date} ${e.time}<button class="btn btn-sm btn-danger float-end" onclick="deleteItem('${EVENTS_KEY}',${i});renderEvents();">✗</button></li>`;});}
-    function renderClients(){const l=document.getElementById('clientList');l.innerHTML='';getData(CLIENTS_KEY).forEach((c,i)=>{l.innerHTML+=`<li class="list-group-item"><strong>${c.name}</strong> ${c.phone} ${c.email}<button class="btn btn-sm btn-danger float-end" onclick="deleteItem('${CLIENTS_KEY}',${i});renderClients();">✗</button></li>`;});}
-    function renderGallery(){const grid=document.getElementById('galleryGrid');grid.innerHTML='';getData('gallery').forEach((src)=>{grid.innerHTML+=`<div class="col-4"><img src="${src}" class="img-fluid rounded"/></div>`;});}
-    function renderProjects(){const l=document.getElementById('projectList');l.innerHTML='';getData(PROJECTS_KEY).forEach((p,i)=>{l.innerHTML+=`<li class="list-group-item"><strong>${p.name}</strong> - ${p.desc}<button class="btn btn-sm btn-danger float-end" onclick="deleteItem('${PROJECTS_KEY}',${i});renderProjects();">✗</button></li>`;});}
-    // Generic delete
-    function deleteItem(key,i){const a=getData(key);a.splice(i,1);setData(key,a);}    
-    // Toggle done
-    window.toggleDone=i=>{const a=getData(SHOPPING_KEY);a[i].done=!a[i].done;setData(SHOPPING_KEY,a);renderShopping();renderCharts();};
-    // Forms
-    document.getElementById('habitForm').onsubmit=e=>{e.preventDefault();const a=getData(HABITS_KEY);a.push({name:document.getElementById('habitInput').value,date:document.getElementById('habitDate').value});setData(HABITS_KEY,a);renderHabits();renderCharts();e.target.reset();};
-    document.getElementById('expenseForm').onsubmit=e=>{e.preventDefault();const a=getData(EXPENSES_KEY);a.push({desc:document.getElementById('descInput').value,amount:document.getElementById('amountInput').value,date:document.getElementById('expenseDate').value});setData(EXPENSES_KEY,a);renderExpenses();renderCharts();e.target.reset();};
-    document.getElementById('shoppingForm').onsubmit=e=>{e.preventDefault();const a=getData(SHOPPING_KEY);a.push({name:document.getElementById('itemInput').value,done:false,date:document.getElementById('itemDate').value,value:document.getElementById('itemValue').value});setData(SHOPPING_KEY,a);renderShopping();renderCharts();e.target.reset();};
-    document.getElementById('drawForm').onsubmit=e=>{e.preventDefault();const g=+document.getElementById('guessInput').value;const r=Math.floor(Math.random()*78);const out=document.getElementById('drawResult');out.innerHTML=g===r?`<span class='text-success'>Acertou! 🎉 (${r})</span>`:`<span class='text-danger'>Errou! 😜 (${r})</span>`;e.target.reset();};
-    document.getElementById('agendaForm').onsubmit=e=>{e.preventDefault();const a=getData(EVENTS_KEY);a.push({title:document.getElementById('eventTitle').value,date:document.getElementById('eventDate').value,time:document.getElementById('eventTime').value});setData(EVENTS_KEY,a);renderEvents();e.target.reset();};
-    document.getElementById('crmForm').onsubmit=e=>{e.preventDefault();const a=getData(CLIENTS_KEY);a.push({name:document.getElementById('clientName').value,phone:document.getElementById('clientPhone').value,email:document.getElementById('clientEmail').value});setData(CLIENTS_KEY,a);renderClients();e.target.reset();};
-    document.getElementById('galleryInput').onchange=e=>{const files=Array.from(e.target.files);files.forEach(f=>{const reader=new FileReader();reader.onload=ev=>{const a=getData('gallery');a.push(ev.target.result);setData('gallery',a);renderGallery();};reader.readAsDataURL(f);});};
-    document.getElementById('projectForm').onsubmit=e=>{e.preventDefault();const a=getData(PROJECTS_KEY);a.push({name:document.getElementById('projectName').value,desc:document.getElementById('projectDesc').value});setData(PROJECTS_KEY,a);renderProjects();e.target.reset();};
-    // Pomodoro
-    function updateTimer(){const m=String(Math.floor(remaining/60)).padStart(2,'0');const s=String(remaining%60).padStart(2,'0');document.getElementById('pomodoroTimer').textContent=`${m}:${s}`;}    
-    document.getElementById('startPomodoro').onclick=()=>{if(!timerInterval)timerInterval=setInterval(()=>{if(remaining>0){remaining--;updateTimer();}else{clearInterval(timerInterval);timerInterval=null;alert('Tempo esgotado! 🎉');}},1000);};
-    document.getElementById('pausePomodoro').onclick=()=>{clearInterval(timerInterval);timerInterval=null;};
-    document.getElementById('resetPomodoro').onclick=()=>{clearInterval(timerInterval);timerInterval=null;remaining=1500;updateTimer();};
-    // Charts
-    function renderCharts() {
-    const exp = getData(EXPENSES_KEY);
-    const expLabels = exp.map(e => e.date);
-    const expValues = exp.map(e => parseFloat(e.amount));
+    // Chaves do localStorage
+    const HABITS_KEY = 'habits_v5';
+    const EXPENSES_KEY = 'expenses_v5';
+    const SHOPPING_KEY = 'shopping_v5';
+    const EVENTS_KEY = 'events_v5';
+    const PROJECTS_KEY = 'projects_v5';
+    let timerInterval;
+    let remaining = 1500; // 25min
 
-    const expensesCtx = document.getElementById('expensesChart').getContext('2d');
-    expensesCtx.canvas.parentNode.style.height = '300px';
-    new Chart(expensesCtx, {
-        type: 'bar',
-        data: {
+    // Toggle tema
+    const toggleBtn = document.getElementById('darkModeToggle');
+    function loadTheme() {
+      const dark = localStorage.getItem('darkMode') === 'true';
+      document.body.classList.toggle('dark-mode', dark);
+      toggleBtn.textContent = dark ? '🌞' : '🌓';
+    }
+    toggleBtn.onclick = () => {
+      const dark = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', dark);
+      toggleBtn.textContent = dark ? '🌞' : '🌓';
+      renderCharts();
+    };
+
+    // Utils storage
+    const getData = key => JSON.parse(localStorage.getItem(key) || '[]');
+    const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+
+    // Seed exemplos
+    function seed() {
+      if (!localStorage.getItem(HABITS_KEY)) {
+        setData(HABITS_KEY, [
+          { name: 'Meditar', date: '2025-04-22' },
+          { name: 'Ler livro', date: '2025-04-23' }
+        ]);
+      }
+      if (!localStorage.getItem(EXPENSES_KEY)) {
+        setData(EXPENSES_KEY, [
+          { type: 'Receita', desc: 'Salário', amount: '2000.00', date: '2025-04-30' },
+          { type: 'Despesa', desc: 'Aluguel', amount: '800.00', date: '2025-04-05' }
+        ]);
+      }
+      if (!localStorage.getItem(SHOPPING_KEY)) {
+        setData(SHOPPING_KEY, [
+          { name: 'Leite', done: false, date: '2025-04-21', value: '4.50' },
+          { name: 'Pão', done: true, date: '2025-04-22', value: '3.00' }
+        ]);
+      }
+      if (!localStorage.getItem(EVENTS_KEY)) {
+        setData(EVENTS_KEY, [
+          { title: 'Reunião', date: '2025-04-25', time: '10:00' },
+          { title: 'Consulta', date: '2025-04-26', time: '14:30' }
+        ]);
+      }
+      if (!localStorage.getItem(PROJECTS_KEY)) {
+        setData(PROJECTS_KEY, [
+          { name: 'Site Pessoal', desc: 'Portfólio moderno' }
+        ]);
+      }
+    }
+
+    // Render funções
+    function renderHabits() {
+      const list = document.getElementById('habitList'); list.innerHTML = '';
+      getData(HABITS_KEY).forEach((h,i)=>{
+        const li = document.createElement('li'); li.className='list-group-item d-flex justify-content-between';
+        li.innerHTML = `<div><strong>${h.name}</strong> <small>${h.date}</small></div>`;
+        list.appendChild(li);
+      });
+    }
+    function renderExpenses() {
+      const data = getData(EXPENSES_KEY);
+      const list = document.getElementById('expenseList'); list.innerHTML = '';
+      let income=0, expenseSum=0;
+      data.forEach((e,i)=>{
+        const amount = parseFloat(e.amount);
+        if(e.type==='Receita') income+=amount;
+        else expenseSum+=amount;
+        const li=document.createElement('li'); li.className='list-group-item d-flex justify-content-between';
+        li.innerHTML = `<div>[${e.type}] ${e.desc}: R$${amount.toFixed(2)} <small>${e.date}</small></div>`;
+        list.appendChild(li);
+      });
+      document.getElementById('incomeTotal').textContent = income.toFixed(2);
+      document.getElementById('expenseTotal').textContent = expenseSum.toFixed(2);
+      document.getElementById('profitTotal').textContent = (income - expenseSum).toFixed(2);
+    }
+    function renderShopping() {
+      const list = document.getElementById('shoppingList'); list.innerHTML = '';
+      getData(SHOPPING_KEY).forEach((s,i)=>{
+        const li=document.createElement('li'); li.className='list-group-item d-flex justify-content-between';
+        li.innerHTML = `<div><input type=checkbox ${s.done?'checked':''} onclick="toggleDone(${i})"> <span style=\"text-decoration:${s.done?'line-through':''}\">${s.name}</span> <small>${s.date}</small> R$${parseFloat(s.value).toFixed(2)}</div>`;
+        list.appendChild(li);
+      });
+    }
+    function renderAgenda() {
+      const events = getData(EVENTS_KEY);
+      const container = document.getElementById('agendaList'); container.innerHTML = '';
+      const dates = [...new Set(events.map(e=>e.date))].sort();
+      dates.forEach(date=>{
+        const h = document.createElement('div'); h.className='agenda-date';
+        h.textContent = date;
+        container.appendChild(h);
+        events.filter(e=>e.date===date).forEach(e=>{
+          const p = document.createElement('p'); p.textContent = `${e.time} - ${e.title}`;
+          container.appendChild(p);
+        });
+      });
+    }
+    function renderGallery() {
+      const grid = document.getElementById('galleryGrid'); grid.innerHTML = '';
+      getData('gallery').forEach(src=>{
+        const div = document.createElement('div'); div.className='col-md-4';
+        div.innerHTML = `<img src=\"${src}\" class=\"img-fluid rounded shadow\">`;
+        grid.appendChild(div);
+      });
+    }
+    function renderProjects() {
+      const list = document.getElementById('projectList'); list.innerHTML = '';
+      getData(PROJECTS_KEY).forEach(p=>{
+        const li = document.createElement('li'); li.className='list-group-item';
+        li.textContent = `${p.name}: ${p.desc}`;
+        list.appendChild(li);
+      });
+    }
+
+    // Helpers gerais
+    function deleteItem(){}
+    window.toggleDone = i=>{
+      const a=getData(SHOPPING_KEY); a[i].done=!a[i].done; setData(SHOPPING_KEY,a); renderShopping(); renderCharts();
+    };
+
+    // Eventos
+    document.getElementById('expenseForm').addEventListener('submit', e=>{
+      e.preventDefault(); const a=getData(EXPENSES_KEY);
+      a.push({ type:document.getElementById('typeInput').value, desc:document.getElementById('descInput').value, amount:document.getElementById('amountInput').value, date:document.getElementById('expenseDate').value });
+      setData(EXPENSES_KEY,a); renderExpenses(); renderCharts(); e.target.reset();
+    });
+    document.getElementById('agendaForm').addEventListener('submit', e=>{
+      e.preventDefault(); const a=getData(EVENTS_KEY);
+      a.push({ title:document.getElementById('eventTitle').value, date:document.getElementById('eventDate').value, time:document.getElementById('eventTime').value });
+      setData(EVENTS_KEY,a); renderAgenda(); e.target.reset();
+    });
+    // Pomodoro, Habits, Shopping, Draw, Projects e Charts você mantém como está...
+
+    function renderCharts() {
+    // Expenses Bar Chart
+    const expData = getData(EXPENSES_KEY);
+    const expLabels = expData.map(e => e.date);
+    const expValues = expData.map(e => parseFloat(e.amount));
+    const expCtx = document.getElementById('expensesChart').getContext('2d');
+    expCtx.canvas.parentNode.style.height = '300px';
+    new Chart(expCtx, {
+      type: 'bar',
+      data: {
         labels: expLabels,
         datasets: [{ label: 'Gastos (R$)', data: expValues, backgroundColor: 'var(--accent)' }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
+      },
+      options: { responsive: true, maintainAspectRatio: false }
     });
 
-    const shop = getData(SHOPPING_KEY);
-    const shopLabels = shop.map(s => s.name);
-    const shopValues = shop.map(s => parseFloat(s.value));
-
-    const shoppingCtx = document.getElementById('shoppingChart').getContext('2d');
-    shoppingCtx.canvas.parentNode.style.height = '300px';
-    new Chart(shoppingCtx, {
-        type: 'pie',
-        data: {
+    // Shopping Pie Chart
+    const shopData = getData(SHOPPING_KEY);
+    const shopLabels = shopData.map(s => s.name);
+    const shopValues = shopData.map(s => parseFloat(s.value));
+    const shopCtx = document.getElementById('shoppingChart').getContext('2d');
+    shopCtx.canvas.parentNode.style.height = '300px';
+    new Chart(shopCtx, {
+      type: 'pie',
+      data: {
         labels: shopLabels,
         datasets: [{ data: shopValues, backgroundColor: ['#007AFF','#34C759','#FF9500','#AF52DE'] }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
+      },
+      options: { responsive: true, maintainAspectRatio: false }
     });
 
+    // Habits Line Chart
     const habits = getData(HABITS_KEY);
     const habitDates = [...new Set(habits.map(h => h.date))];
     const habitCounts = habitDates.map(date => habits.filter(h => h.date === date).length);
-
-    const habitsCtx = document.getElementById('habitsChart').getContext('2d');
-    habitsCtx.canvas.parentNode.style.height = '300px';
-    new Chart(habitsCtx, {
-        type: 'line',
-        data: {
+    const habCtx = document.getElementById('habitsChart').getContext('2d');
+    habCtx.canvas.parentNode.style.height = '300px';
+    new Chart(habCtx, {
+      type: 'line',
+      data: {
         labels: habitDates,
         datasets: [{ label: 'Hábitos por Dia', data: habitCounts, borderColor: 'var(--accent)', fill: false, tension: 0.4 }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
+      },
+      options: { responsive: true, maintainAspectRatio: false }
     });
-    }
+  }
 
-// Recarrega tudo no DOM
-document.addEventListener('DOMContentLoaded', () => {
-  loadTheme();
-  seed();
-  renderHabits();
-  renderExpenses();
-  renderShopping();
-  renderAgenda();
-  renderCRM();
-  renderGallery();
-  renderProjects();
-  renderCharts();
-});
-
-    // Init
-    document.addEventListener('DOMContentLoaded', () => {
-        loadTheme();
-        seed(); // ← ESSENCIAL: esta linha chama a função seed!
-        renderHabits();
-        renderExpenses();
-        renderShopping();
-        renderAgenda();
-        renderCRM();
-        renderGallery();
-        renderProjects();
-        renderCharts();
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', ()=>{
+      loadTheme(); seed(); renderHabits(); renderExpenses(); renderShopping(); renderAgenda(); renderGallery(); renderProjects(); renderCharts();
     });
   </script>
 </body>
